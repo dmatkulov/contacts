@@ -1,12 +1,12 @@
-import {ApiContact, ContactMutation} from '../types';
+import {ApiContact, Contact, ContactMutation} from '../types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../app/store';
-import {fetchContacts, fetchOneContact} from './contactsThunks';
+import {createContact, deleteContact, fetchContacts, fetchEditContact, fetchOneContact} from './contactsThunks';
 
 interface ContactsState {
   contacts: ContactMutation[],
-  contactItem: ApiContact | null;
-  contactApi: ApiContact | null,
+  contactInfo: Contact | null;
+  contact: ApiContact | null,
   createLoading: boolean;
   fetchLoading: boolean;
   fetchOneLoading: boolean;
@@ -18,8 +18,8 @@ interface ContactsState {
 
 const initialState: ContactsState = {
   contacts: [],
-  contactItem: null,
-  contactApi: null,
+  contactInfo: null,
+  contact: null,
   createLoading: false,
   fetchLoading: false,
   fetchOneLoading: false,
@@ -52,9 +52,38 @@ export const contactsSlice = createSlice({
       state.fetchOneLoading = true;
     });
     builder.addCase(fetchOneContact.fulfilled, (state, {payload: contact}) => {
-      state.contactItem = contact;
+      state.fetchOneLoading = false;
+      state.contactInfo = contact;
     });
     builder.addCase(fetchOneContact.rejected, (state) => {
+      state.fetchOneLoading = false;
+    });
+    builder.addCase(deleteContact.pending, (state, {meta}) => {
+      state.deleteLoading = meta.arg;
+    });
+    builder.addCase(deleteContact.fulfilled, (state) => {
+      state.deleteLoading = false;
+    });
+    builder.addCase(deleteContact.rejected, (state) => {
+      state.deleteLoading = false;
+    });
+    builder.addCase(createContact.pending, (state) => {
+      state.createLoading = true;
+    });
+    builder.addCase(createContact.fulfilled, (state) => {
+      state.createLoading = false;
+    });
+    builder.addCase(createContact.rejected, (state) => {
+      state.createLoading = false;
+    });
+    builder.addCase(fetchEditContact.pending, (state) => {
+      state.fetchOneLoading = true;
+    });
+    builder.addCase(fetchEditContact.fulfilled, (state, {payload: contact}) => {
+      state.fetchOneLoading = false;
+      state.contact = contact;
+    });
+    builder.addCase(fetchEditContact.rejected, (state) => {
       state.fetchOneLoading = false;
     });
   }
@@ -65,8 +94,8 @@ export const {
   setShowModal
 } = contactsSlice.actions;
 export const selectContacts = (state: RootState) => state.contacts.contacts;
-export const selectOneContact = (state: RootState) => state.contacts.contactItem;
-export const selectContactApi = (state: RootState) => state.contacts.contactApi;
+export const selectOneContact = (state: RootState) => state.contacts.contactInfo;
+export const selectContact = (state: RootState) => state.contacts.contact;
 export const selectFetchLoading = (state: RootState) => state.contacts.fetchLoading;
 export const selectFetchOneLoading = (state: RootState) => state.contacts.fetchOneLoading;
 export const selectCreateLoading = (state: RootState) => state.contacts.createLoading;

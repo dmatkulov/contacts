@@ -18,7 +18,7 @@ const ContactItem: React.FC<Props> = ({contact}) => {
   
   return (
     <>
-      <div className="card mb-3" onClick={fetchContact}>
+      <div className="card mb-3" onClick={fetchContact} style={{cursor: 'pointer'}}>
         <div className="card-body">
           <div className="d-flex align-items-center gap-3">
             <div className="overflow-hidden">

@@ -1,7 +1,15 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {ApiContact, ApiContacts, ContactMutation} from '../types';
+import {ApiContact, ApiContacts, Contact, ContactMutation} from '../types';
 import axiosApi from '../axiosApi';
+import {AppDispatch} from '../app/store';
+import {setShowModal} from './contactsSlice';
 
+export const createContact = createAsyncThunk<void, ApiContact>(
+  'contacts/create',
+  async (contact: ApiContact) => {
+    await axiosApi.post('/contacts.json', contact);
+  }
+);
 export const fetchContacts = createAsyncThunk<ContactMutation[], undefined>(
   'contacts/fetchAll',
   async () => {
@@ -23,7 +31,7 @@ export const fetchContacts = createAsyncThunk<ContactMutation[], undefined>(
     return fetchedContacts;
   });
 
-export const fetchOneContact = createAsyncThunk<ApiContact, string>(
+export const fetchOneContact = createAsyncThunk<Contact, string>(
   'contacts/fetchOne',
   async (id: string) => {
     const contactResponse = await axiosApi.get<ApiContact | null>('/contacts/' + id + '.json');
@@ -32,6 +40,37 @@ export const fetchOneContact = createAsyncThunk<ApiContact, string>(
     if (contact === null) {
       throw new Error('Not found');
     }
-    return contact;
+    return {
+      id,
+      ...contact
+    };
+  }
+);
+
+export const fetchEditContact = createAsyncThunk<ApiContact, string>(
+  'contacts/fetchEdit',
+  async (id) => {
+    const contactResponse = await axiosApi.get('/contacts/' + id + '.json');
+    return contactResponse.data ?? null;
+  }
+);
+
+interface UpdateContactParams {
+  id: string;
+  contact: ApiContact;
+}
+
+export const updateContact = createAsyncThunk<void, UpdateContactParams>(
+  'contacts/update',
+  async ({id, contact}) => {
+    await axiosApi.put('/contacts/' + id + '.json', contact);
+  }
+);
+
+export const deleteContact = createAsyncThunk<void, string, { dispatch: AppDispatch }>(
+  'contacts/delete',
+  async (id, thunkAPI) => {
+    await axiosApi.delete('/contacts/' + id + '.json');
+    thunkAPI.dispatch(setShowModal(false));
   }
 );

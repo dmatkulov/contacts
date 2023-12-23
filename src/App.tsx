@@ -12,7 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/new-contact" element={<AddContact/>}/>
-          <Route path="/:id/edit" element={<EditContact/>}/>
+          <Route path="/contacts/:id/edit" element={<EditContact/>}/>
           <Route path="*" element={<h2>Page not found</h2>}/>
         </Routes>
       </Layout>

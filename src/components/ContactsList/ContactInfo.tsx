@@ -3,7 +3,7 @@ import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {
   selectDeleteLoading,
   selectFetchOneLoading,
-  selectOneContact,
+  selectOneContact, setShowModal,
 } from '../../store/contactsSlice';
 import {deleteContact, fetchContacts} from '../../store/contactsThunks';
 import Spinner from '../Spinner/Spinner';
@@ -19,6 +19,7 @@ const ContactInfo: React.FC = () => {
   
   const onDeleteContact = async (id: string) => {
     await dispatch(deleteContact(id));
+    dispatch(setShowModal(false));
     await dispatch(fetchContacts());
   };
   

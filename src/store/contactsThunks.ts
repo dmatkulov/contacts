@@ -1,8 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {ApiContact, ApiContacts, Contact, ContactMutation} from '../types';
 import axiosApi from '../axiosApi';
-import {AppDispatch} from '../app/store';
-import {setShowModal} from './contactsSlice';
 
 export const createContact = createAsyncThunk<void, ApiContact>(
   'contacts/create',
@@ -67,10 +65,9 @@ export const updateContact = createAsyncThunk<void, UpdateContactParams>(
   }
 );
 
-export const deleteContact = createAsyncThunk<void, string, { dispatch: AppDispatch }>(
+export const deleteContact = createAsyncThunk<void, string>(
   'contacts/delete',
-  async (id, thunkAPI) => {
+  async (id) => {
     await axiosApi.delete('/contacts/' + id + '.json');
-    thunkAPI.dispatch(setShowModal(false));
   }
 );

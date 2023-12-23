@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import ContactForm from '../../components/ContactForm/ContactForm';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {selectContact, selectFetchOneLoading, selectUpdateLoading} from '../../store/contactsSlice';
+import {selectContact, selectFetchOneLoading, selectUpdateLoading, setShowModal} from '../../store/contactsSlice';
 import {useNavigate, useParams} from 'react-router-dom';
 import {fetchEditContact, updateContact} from '../../store/contactsThunks';
 import {ApiContact} from '../../types';
@@ -18,6 +18,7 @@ const EditContact: React.FC = () => {
   
   useEffect(() => {
     dispatch(fetchEditContact(id));
+    dispatch(setShowModal(false));
   }, [dispatch, id]);
   
   if (!contact) {

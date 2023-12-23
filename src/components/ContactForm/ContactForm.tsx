@@ -2,6 +2,9 @@ import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {ApiContact} from '../../types';
 import ButtonSpinner from '../Spinner/ButtonSpinner';
+import {useDispatch} from 'react-redux';
+import {setShowModal} from '../../store/contactsSlice';
+import {defaultPhoto} from '../../lib/constants';
 
 const initialState: ApiContact = {
   name: '',
@@ -17,13 +20,9 @@ interface Props {
   isLoading?: boolean;
 }
 
-const ContactForm: React.FC<Props> = ({
-                                        onSubmitContact,
-                                        existingContact = initialState,
-                                        isEdit = false,
-                                        isLoading = false
-                                      }) => {
+const ContactForm: React.FC<Props> = ({onSubmitContact, existingContact = initialState, isEdit = false, isLoading = false}) => {
   const [contact, setContact] = useState<ApiContact>(existingContact);
+  const dispatch = useDispatch();
   
   const changeContact = (event: React.ChangeEvent<HTMLInputElement>) => {
     setContact((prev) => ({
@@ -34,11 +33,8 @@ const ContactForm: React.FC<Props> = ({
   
   const onFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmitContact({ ...contact });
+    onSubmitContact({...contact});
   };
-  
-  const photoURL = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAKIMFQs4TWCA92X5G-FHQbLN0ApC6XokA5GyrDX9Tpg&s';
-  const photo = contact.photo || photoURL;
   
   return (
     <form onSubmit={onFormSubmit} className="col-6 mx-auto">
@@ -95,7 +91,7 @@ const ContactForm: React.FC<Props> = ({
       <div className="d-flex mb-5 border-bottom pb-5">
         <p className="col-3">Photo preview</p>
         <img
-          src={photo}
+          src={contact.photo ? contact.photo : defaultPhoto}
           alt={contact.name}
           className="w-25 h-auto border-secondary bg-body-tertiary rounded"
         />
@@ -112,6 +108,7 @@ const ContactForm: React.FC<Props> = ({
         <Link
           to="/"
           className="btn btn-dark"
+          onClick={() => dispatch(setShowModal(false))}
         >
           Back to contacts
         </Link>

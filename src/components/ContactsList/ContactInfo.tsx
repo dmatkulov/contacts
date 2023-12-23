@@ -9,6 +9,7 @@ import {deleteContact, fetchContacts} from '../../store/contactsThunks';
 import Spinner from '../Spinner/Spinner';
 import ButtonSpinner from '../Spinner/ButtonSpinner';
 import {Link} from 'react-router-dom';
+import {defaultPhoto} from '../../lib/constants';
 
 const ContactInfo: React.FC = () => {
   const contact = useAppSelector(selectOneContact);
@@ -28,7 +29,7 @@ const ContactInfo: React.FC = () => {
           <div className="card mb-3">
             <div className="card-body row d-flex align-items-center">
               <div className="col-3">
-                <img src={contact.photo} alt={contact.name} className="img-fluid w-100"/>
+                <img src={contact.photo ? contact.photo : defaultPhoto} alt={contact.name} className="img-fluid w-100"/>
               </div>
               <h4 className="col-9 card-title">
                 {contact.name}

@@ -1,7 +1,14 @@
 import {ApiContact, Contact, ContactMutation} from '../types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../app/store';
-import {createContact, deleteContact, fetchContacts, fetchEditContact, fetchOneContact} from './contactsThunks';
+import {
+  createContact,
+  deleteContact,
+  fetchContacts,
+  fetchEditContact,
+  fetchOneContact,
+  updateContact
+} from './contactsThunks';
 
 interface ContactsState {
   contacts: ContactMutation[],
@@ -10,7 +17,6 @@ interface ContactsState {
   createLoading: boolean;
   fetchLoading: boolean;
   fetchOneLoading: boolean;
-  fetchError: boolean;
   updateLoading: boolean;
   deleteLoading: false | string;
   show: boolean;
@@ -23,7 +29,6 @@ const initialState: ContactsState = {
   createLoading: false,
   fetchLoading: false,
   fetchOneLoading: false,
-  fetchError: false,
   updateLoading: false,
   deleteLoading: false,
   show: false,
@@ -46,7 +51,7 @@ export const contactsSlice = createSlice({
       state.contacts = contacts;
     });
     builder.addCase(fetchContacts.rejected, (state) => {
-      state.fetchError = true;
+      state.fetchLoading = false;
     });
     builder.addCase(fetchOneContact.pending, (state) => {
       state.fetchOneLoading = true;
@@ -85,6 +90,15 @@ export const contactsSlice = createSlice({
     });
     builder.addCase(fetchEditContact.rejected, (state) => {
       state.fetchOneLoading = false;
+    });
+    builder.addCase(updateContact.pending, (state) => {
+      state.updateLoading = true;
+    });
+    builder.addCase(updateContact.fulfilled, (state) => {
+      state.updateLoading = false;
+    });
+    builder.addCase(updateContact.rejected, (state) => {
+      state.updateLoading = false;
     });
   }
 });

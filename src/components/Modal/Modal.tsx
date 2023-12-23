@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {PropsWithChildren} from 'react';
 import Backdrop from '../Backdrop/Backdrop';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectModalShow, setShowModal} from '../../store/contactsSlice';
-import ContactInfo from '../ContactsList/ContactInfo';
 
-const Modal: React.FC = () => {
+const Modal: React.FC<PropsWithChildren> = ({children}) => {
   const dispatch = useAppDispatch();
   const show = useAppSelector(selectModalShow);
   
@@ -26,7 +25,9 @@ const Modal: React.FC = () => {
               <h1 className="modal-title fs-5">Contact info</h1>
               <button type="button" className="btn btn-close" onClick={onClose}></button>
             </div>
-            <ContactInfo/>
+            <div className="modal-body m-0 p-0">
+              {children}
+            </div>
           </div>
         </div>
       </div>

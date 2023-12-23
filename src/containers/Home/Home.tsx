@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import ContactsLists from '../../components/ContactsList/ContactsLists';
 import {useAppDispatch} from '../../app/hooks';
 import {fetchContacts} from '../../store/contactsThunks';
-import Modal from '../../components/Modal/Modal';
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -17,7 +16,6 @@ const Home: React.FC = () => {
       >
         Contacts
       </h1>
-      <Modal/>
       <ContactsLists/>
     </div>
   );
